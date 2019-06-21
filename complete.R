@@ -1,17 +1,27 @@
+require(stringr)
+require(stats)
+
 complete <- function(directory, id = 1:332) {
   
-  ## 'directory' is a character vector of length 1 indicating
-  ## the location of the CSV file
+  path <- paste0(getwd(), "/", directory, "/") #setting the working directory
   
-  ## 'id' is an integer vector indicating the monitor ID numbers
-  ## to be used
+  data <- data.frame() #create an empty data frame
   
-  ## Return a data frame of the form:
-  ## id nobs
-  ## 1  117
-  ## 2  1041
-  ## ...
-  ## where 'id' is the monitor ID number and the 'nobs' is the 
-  ## number of complete cases
-  
+  for (i in id) {
+    # 1. Read in the CSV
+    filenumber <- str_pad(i, width=3, side="left", pad="0")
+    filename <- paste0(path, filenumber, ".csv")
+    casefile <-read.csv(file=filename, header=TRUE)
+    casefile1 <- na.omit (casefile)
+    nobs <- nrow(casefile1)
+   # nobs <- sum (complete.cases(read.csv(file=filename, header=TRUE)))
+    # 2. Calculate complete cases in file 
+    # 3. Compile data frame (matrix)
+    ## Return a data frame of the form:
+    ## id nobs
+    ## 1  117
+    ## 2  1041
+    data <- rbind(data, data.frame(filenumber, nobs)) #add files to main data frame
+  }
+  return(data)
 }
