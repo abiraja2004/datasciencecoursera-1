@@ -10,9 +10,11 @@ pollutantmean <- function(directory, pollutant, id=1:332) {
     filenumber <- str_pad(i, width=3, side="left", pad="0")
     filename <- paste0(path, filenumber, ".csv")
     temp <- read.csv(file=filename, header=TRUE)
-    print(temp)
     data <- rbind(data, temp) #add files to main data frame
   }
   
-  return(mean(data[pollutant], rm.na=TRUE))
+  pMean <- mean(data[, pollutant], trim=0, na.rm=TRUE)
+  
+  return(pMean)
+ 
 }
