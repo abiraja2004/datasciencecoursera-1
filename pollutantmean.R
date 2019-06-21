@@ -2,7 +2,6 @@ require(stringr)
 pollutantmean <- function(directory, pollutant, id=1:332) {
   
   path <- paste0(getwd(), "/", directory, "/") #setting the working directory
-  # files <- list.files(path="C:/Users/Preethi's Laptop/Documents/R/datasciencecoursera/specdata/specdata", pattern="csv", full.names=TRUE) #create a list of files
 
   data <- data.frame() #create an empty data frame
   
