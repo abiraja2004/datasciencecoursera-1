@@ -2,7 +2,7 @@ require(stringr)
 corr <- function(directory, threshold =0){
   
   id <- 1:332
-  
+  addcorr <-vector(mode = "numeric", length = 0)
   ##directory is a character vector of length 1 indicating the location of the csv files
   ##threshold is a numeric vector of length 1 indicating the number of completely
   ##observed observations (on all variables) required to compute the correlation
@@ -17,21 +17,20 @@ corr <- function(directory, threshold =0){
     filenumber <- str_pad(i, width=3, side="left", pad="0")
     filename <- paste0(path, filenumber, ".csv")
     casefile <- read.csv(file=filename, header=TRUE)
-    casefile1 <- na.omit (casefile)
-    print(casefile1)
+    casefile1 <- casefile[complete.cases(casefile),]
+    #casefile1 <- na.omit (casefile)
     nobs <- nrow(casefile1)
-    print(nobs)
   
   if (nobs > threshold) {
+    
+    #for that file you find the correlation between nitrate and sulfate
+    #To combine each correlation for each file in vector format using the concatenate function 
+    #since this is not a data frame we cannot use rbind or cbind
+    
+      addcorr <- c(addcorr, cor(casefile1$nitrate, casefile1$sulfate))
   
-      addcorr <- cor(x=casefile1$nitrates,y=casefile1$sulfates, use ="complete.obs")
-  
-      print(addcorr)
-      return(addcorr)
     }
-  #  else {
-      
-   #   return (0)
-  #}
+
+    return(addcorr)
 }
 }
