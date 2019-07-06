@@ -7,35 +7,20 @@ rankhospital <- function(state, outcome, num="best") {
   statedata <- subset(readdata, readdata$State==state)
   colnum <- colnumFor(outcome)
   
+  order_by <- as.numeric(statedata[, colnum])
+  
   if (num=='best'){
-    ## min_outcome <- min(as.numeric(statedata[, colnum]), na.rm = TRUE)
-    ## hospital_name <- statedata[statedata[,colnum] == min_outcome, 2]
-    ## hospital_name <- na.omit(hospital_name)
-    ## hospital_name <- sort(hospital_name)
-    ## return(hospital_name[1])
-    
     num <- 1
   }
   
   if (num=='worst'){
-    ## max_outcome <- max(as.numeric(statedata[, colnum]), na.rm = TRUE)
-    ## hospital_name <- statedata[statedata[,colnum] == max_outcome, 2]
-    ## hospital_name <- na.omit(hospital_name)
-    ## hospital_name <- sort(hospital_name)
-    ## return(hospital_name[1])
-    
-    ranked_outcome <- statedata[order(-as.numeric(statedata[, colnum]),
-                                      statedata[,2],
-                                      na.last=TRUE), ]
-    hospital_name <- ranked_outcome[1, 2]
-    return(hospital_name)
+    num <- 1
+    order_by <- -as.numeric(statedata[, colnum])
   }
   
-  ranked_outcome <- statedata[order(as.numeric(statedata[, colnum]),
+  ranked_outcome <- statedata[order(order_by,
                                     statedata[,2],
                                     na.last=TRUE), ]
   hospital_name <- ranked_outcome[num, 2]
   return(hospital_name)
 }    
-
-  
