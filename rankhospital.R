@@ -1,61 +1,41 @@
+source(here::here("assignment_3_utilities.R"))
+
 rankhospital <- function(state, outcome, num="best") {
-  ##read outcome data
-  setwd("C:/Users/Preethi's Laptop/Documents/R/datasciencecoursera/data_ProgAssignment3") ##setting working directory
-  readdata <- read.csv("outcome-of-care-measures.csv", header = TRUE, stringsAsFactors = FALSE, na.strings = "Not Available")
-  ##reading the csv
-  statedata <- unique(readdata$State) ##vector of  state data
-  outcomemeasure <- c("heart attack", "heart failure", "pneumonia")## vector of outcomes data
+  readdata <- init()
+  validateparameters(state, outcome, unique(readdata$State))
   
-  ##checking validity of state data inputted and outcome data income data inputted
+  statedata <- subset(readdata, readdata$State==state)
+  colnum <- colnumFor(outcome)
   
-  if (!(state %in% statedata)) stop ("invalid state")
-  if (!(outcome %in% outcomemeasure)) stop ("invalid outcome")
-  # else "ok"
-  relevantstate <- readdata[readdata$State == state, ]
-  #print (relevantstate)
-  
-  if (outcome == outcomemeasure[1]) {
+  if (num=='best'){
+    ## min_outcome <- min(as.numeric(statedata[, colnum]), na.rm = TRUE)
+    ## hospital_name <- statedata[statedata[,colnum] == min_outcome, 2]
+    ## hospital_name <- na.omit(hospital_name)
+    ## hospital_name <- sort(hospital_name)
+    ## return(hospital_name[1])
     
-      if (num == 'best'){
-      y <- relevantstate[min(relevantstate [,11], na.rm = TRUE), 2]
-      print (y)
-     }
-      if (num == 'worst'){
-      y <- relevantstate[max(relevantstate [,11], na.rm = TRUE), 2]
-      print (y)
-      }
-    y <- relevantstate[rank(relevantstate [,11], na.last = TRUE), 2]
-    final <- y[num]
-    print (final)
+    num <- 1
   }
-    if (outcome == outcomemeasure[2]) {
-      if (num == 'best'){
-        y <- relevantstate[min(relevantstate [,17], na.rm = TRUE), 2]
-        print (y)
-      }
-      if (num == 'worst'){
-        y <- relevantstate[max(relevantstate [,17], na.rm = TRUE), 2]
-        print (y)
-      }
-      y <- relevantstate[rank(relevantstate [,17], na.last = TRUE), 2]
-      final <- y[num]
-      print (final)
-    }  
-  if (outcome == outcomemeasure[3]) {
-    if (num == 'best'){
-      y <- relevantstate[min(relevantstate [,23], na.rm = TRUE), 2]
-      print (y)
-    }
-    if (num == 'worst'){
-      y <- relevantstate[max(relevantstate [,23], na.rm = TRUE), 2]
-      print (y)
-    }
-    y <- relevantstate[rank(relevantstate [,23], na.last = TRUE), 2]
-    final <- y[num]
-    print (final)
-  }  
-  }  
   
+  if (num=='worst'){
+    ## max_outcome <- max(as.numeric(statedata[, colnum]), na.rm = TRUE)
+    ## hospital_name <- statedata[statedata[,colnum] == max_outcome, 2]
+    ## hospital_name <- na.omit(hospital_name)
+    ## hospital_name <- sort(hospital_name)
+    ## return(hospital_name[1])
+    
+    ranked_outcome <- statedata[order(-as.numeric(statedata[, colnum]),
+                                      statedata[,2],
+                                      na.last=TRUE), ]
+    hospital_name <- ranked_outcome[1, 2]
+    return(hospital_name)
+  }
   
-  ##return hospitalname with given rank for 30 day rate
+  ranked_outcome <- statedata[order(as.numeric(statedata[, colnum]),
+                                    statedata[,2],
+                                    na.last=TRUE), ]
+  hospital_name <- ranked_outcome[num, 2]
+  return(hospital_name)
+}    
+
   
